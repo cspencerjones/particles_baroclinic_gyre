@@ -64,6 +64,9 @@ C     == local variables ==
       CHARACTER*(10) suff
       INTEGER iG,jG,i,j,icount
       INTEGER sqrtFperC,iFpC,jFpC
+      INTEGER k,klevels_length
+      PARAMETER(klevels_length=2)
+      _RL klevels(klevels_length)
 
 C     number of active record in the file (might be lower than the
 C     total number of records because the tile could have contained
@@ -71,13 +74,15 @@ C     more floats at an earlier restart
       INTEGER npart_read
       _RL     npart_dist
 
+
 C     == end of interface ==
 
 
 
 CSJ   Define sqrt of no of floats per cell
       sqrtFperC = 2
-
+      klevels(1) = 1
+      klevels(2) = 12
 
 
 
@@ -209,30 +214,33 @@ CSJ----    Add code to write particles
      &                       SQUEEZE_RIGHT, myThid )
 c
            npart_tile(bi,bj) = sNx*sNy*sqrtFperC*sqrtFperC
-           max_npart  = sNx*sNy*sqrtFperC*sqrtFperC*3
+     &                                 *klevels_length
+           max_npart  = sNx*sNy*sqrtFperC*sqrtFperC
+     &                            *klevels_length*3
            npart_read = 1
 c           
            ip=1
-           DO jFpC=1,sqrtFperC
-            DO iFpC=1,sqrtFperC
-             DO j=1,sNx
-              DO i=1,sNy
-               icount=icount+1
-               npart(ip,bi,bj)  = icount
-               tstart(ip,bi,bj) = -1. _d 0
-               ipart(ip,bi,bj)  = i+(DBLE(iFpC)-1)/DBLE(sqrtFperC)
-               jpart(ip,bi,bj)  = j+(DBLE(jFpC)-1)/DBLE(sqrtFperC)
-               kpart(ip,bi,bj)  = 1. _d 0
-               kfloat(ip,bi,bj) = 0. _d 0
-               iup(  ip,bi,bj)  = 0. _d 0
-               itop( ip,bi,bj)  = 0. _d 0
-               tend( ip,bi,bj)  = -1. _d 0
-               ip=ip+1
+           DO k=1,klevels_length
+            DO jFpC=1,sqrtFperC
+             DO iFpC=1,sqrtFperC
+              DO j=1,sNx
+               DO i=1,sNy
+                icount=icount+1
+                npart(ip,bi,bj)  = icount
+                tstart(ip,bi,bj) = -1. _d 0
+                ipart(ip,bi,bj)  = i+(DBLE(iFpC)-1)/DBLE(sqrtFperC)
+                jpart(ip,bi,bj)  = j+(DBLE(jFpC)-1)/DBLE(sqrtFperC)
+                kpart(ip,bi,bj)  =  klevels(k)
+                kfloat(ip,bi,bj) = 0. _d 0
+                iup(  ip,bi,bj)  = 0. _d 0
+                itop( ip,bi,bj)  = 0. _d 0
+                tend( ip,bi,bj)  = -1. _d 0
+                ip=ip+1
+               ENDDO
               ENDDO
              ENDDO
             ENDDO
            ENDDO
-
 CSJ----    End of code to write particles
 
 C-      end bi,bj loops
