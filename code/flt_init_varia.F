@@ -64,9 +64,8 @@ C     == local variables ==
       CHARACTER*(10) suff
       INTEGER iG,jG,i,j,icount
       INTEGER iFpC,jFpC
-      INTEGER k,klevels_length
-      PARAMETER(klevels_length=2)
-      _RL klevels(klevels_length)
+      INTEGER k
+
 
 C     number of active record in the file (might be lower than the
 C     total number of records because the tile could have contained
@@ -77,11 +76,6 @@ C     more floats at an earlier restart
 
 C     == end of interface ==
 
-
-
-CSJ   Define sqrt of no of floats per cell
-      klevels(1) = 1
-      klevels(2) = 12
 
 
 
@@ -213,13 +207,13 @@ CSJ----    Add code to write particles
      &                       SQUEEZE_RIGHT, myThid )
 c
            npart_tile(bi,bj) = sNx*sNy*flt_sqrtFperC**2
-     &                                 *klevels_length
+     &                                 *kno
            max_npart  = sNx*sNy*flt_sqrtFperC**2
-     &                            *klevels_length
+     &                            *kno
            npart_read = 1
 c           
            ip=1
-           DO k=1,klevels_length
+           DO k=1,kno
             DO jFpC=1,flt_sqrtFperC
              DO iFpC=1,flt_sqrtFperC
               DO j=1,sNx
@@ -231,7 +225,7 @@ c
      &                               /DBLE(flt_sqrtFperC)
                 jpart(ip,bi,bj)  = j+(DBLE(jFpC)-1)
      &                               /DBLE(flt_sqrtFperC)
-                kpart(ip,bi,bj)  =  klevels(k)
+                kpart(ip,bi,bj)  =  flt_klevels(k)
                 kfloat(ip,bi,bj) = 0. _d 0
                 iup(  ip,bi,bj)  = 0. _d 0
                 itop( ip,bi,bj)  = 0. _d 0

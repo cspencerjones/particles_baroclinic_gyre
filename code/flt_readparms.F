@@ -24,12 +24,13 @@ C     myThid - thread number for this instance of the routine.
 C     == local variables ==
       CHARACTER*(MAX_LEN_MBUF) msgBuf
       INTEGER iUnit
+      INTEGER k
 
       NAMELIST /FLT_NML/ flt_int_traj, flt_int_prof,
      &                   flt_selectTrajOutp, flt_selectProfOutp,
      &                   flt_noise, flt_deltaT, FLT_Iter0,
      &                   flt_file, mapIniPos2Index, 
-     &                   flt_sqrtFperC
+     &                   flt_sqrtFperC, flt_klevels
 
 C     == end of interface ==
 
@@ -56,6 +57,10 @@ C     Set default values.
       flt_selectTrajOutp = 2
       flt_selectProfOutp = 2
       flt_sqrtFperC = 1
+      
+      DO k=1,kno
+        flt_klevels(k) = 1
+      ENDDO
 
       WRITE(msgBuf,'(A)') ' FLT_READPARMS: opening data.flt'
       CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,

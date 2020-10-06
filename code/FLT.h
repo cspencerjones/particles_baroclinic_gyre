@@ -16,8 +16,10 @@ C                    Can be deeper than 1, e.g. IF no mixed layer model is used
 C     flt_nan     :: qualifier for a float that is not yet released or that died
       _RL flt_surf
       _RL flt_nan
+      INTEGER kno
       PARAMETER (flt_surf = 1.)
       PARAMETER (flt_nan = -999.)
+      PARAMETER (kno = 2)
 
 C     Full domain extension:
 C     flt_xLo     :: Full domain lower X boundary
@@ -51,10 +53,12 @@ C           The subsampling of profiles can be done later in the analysis.
       _RL flt_int_traj, flt_int_prof
       INTEGER FLT_Iter0
       INTEGER flt_sqrtFperC
+      _RL flt_klevels(kno)
       COMMON / FLT_PARAM_R /
      &       flt_noise, flt_deltaT,
      &       flt_int_traj, flt_int_prof,
-     &       FLT_Iter0, flt_sqrtFperC
+     &       FLT_Iter0, flt_sqrtFperC,
+     &       flt_klevels
 
 C  flt_selectTrajOutp :: select which var. to output along trajectories
 C  flt_selectProfOutp :: select which var. to output along profiles

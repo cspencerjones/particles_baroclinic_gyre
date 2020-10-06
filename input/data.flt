@@ -1,0 +1,14 @@
+#
+# *********************
+# Float Namelist
+# *********************
+ &FLT_NML
+ flt_int_traj = 1200.,
+ flt_int_prof = 43200000.,
+ flt_deltaT=1200,
+ flt_noise    = 0.0,
+ FLT_Iter0=0,
+ flt_file     = 'float_surf.bin',
+ flt_sqrtFperC = 1,
+ flt_klevels = 1. , 6.,
+ &
