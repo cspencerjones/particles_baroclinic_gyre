@@ -63,7 +63,7 @@ C     == local variables ==
       CHARACTER*(MAX_LEN_MBUF) msgBuf
       CHARACTER*(10) suff
       INTEGER iG,jG,i,j,icount
-      INTEGER sqrtFperC,iFpC,jFpC
+      INTEGER iFpC,jFpC
       INTEGER k,klevels_length
       PARAMETER(klevels_length=2)
       _RL klevels(klevels_length)
@@ -80,7 +80,6 @@ C     == end of interface ==
 
 
 CSJ   Define sqrt of no of floats per cell
-      sqrtFperC = 2
       klevels(1) = 1
       klevels(2) = 12
 
@@ -213,23 +212,25 @@ CSJ----    Add code to write particles
           CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
      &                       SQUEEZE_RIGHT, myThid )
 c
-           npart_tile(bi,bj) = sNx*sNy*sqrtFperC*sqrtFperC
+           npart_tile(bi,bj) = sNx*sNy*flt_sqrtFperC**2
      &                                 *klevels_length
-           max_npart  = sNx*sNy*sqrtFperC*sqrtFperC
-     &                            *klevels_length*3
+           max_npart  = sNx*sNy*flt_sqrtFperC**2
+     &                            *klevels_length
            npart_read = 1
 c           
            ip=1
            DO k=1,klevels_length
-            DO jFpC=1,sqrtFperC
-             DO iFpC=1,sqrtFperC
+            DO jFpC=1,flt_sqrtFperC
+             DO iFpC=1,flt_sqrtFperC
               DO j=1,sNx
                DO i=1,sNy
                 icount=icount+1
                 npart(ip,bi,bj)  = icount
                 tstart(ip,bi,bj) = -1. _d 0
-                ipart(ip,bi,bj)  = i+(DBLE(iFpC)-1)/DBLE(sqrtFperC)
-                jpart(ip,bi,bj)  = j+(DBLE(jFpC)-1)/DBLE(sqrtFperC)
+                ipart(ip,bi,bj)  = i+(DBLE(iFpC)-1)
+     &                               /DBLE(flt_sqrtFperC)
+                jpart(ip,bi,bj)  = j+(DBLE(jFpC)-1)
+     &                               /DBLE(flt_sqrtFperC)
                 kpart(ip,bi,bj)  =  klevels(k)
                 kfloat(ip,bi,bj) = 0. _d 0
                 iup(  ip,bi,bj)  = 0. _d 0
